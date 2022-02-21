@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <script type="text/javascript" src="jquery.js"></script>
-        <script type="text/javascript" src="main.js"></script>
+        <script type="text/javascript" src="mainCorriger.js"></script>
         <title>Jeu de la vie</title>
         <style media="screen">
         .border-1{
@@ -16,10 +16,24 @@
         .h-1{
             height: 5px;
         }
+        #dataTable {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+        #dataTable td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            background-color: white;
+            width: 5px;
+            height: 5px;
+        }
+        #dataTable td.estvivante {
+            background-color: black;
+        }
         </style>
     </head>
     <body>
-        <div id="table"></div>
+        <div id="table"><table id="dataTable"><tbody></tbody></table></div>
         <button type="button" name="button" id="start">Start</button>
         <button type="button" name="button" id="pause">Pause</button>
         <button type="button" name="button" id="restart">Restart</button>

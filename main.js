@@ -10,7 +10,7 @@ $(document).ready(function () {
 
     $('#start').click(function(){
         if (!nIntervId) {
-            nIntervId = setInterval(play, 400);
+            nIntervId = setInterval(play, 200);
         }
     });
 
@@ -20,6 +20,8 @@ $(document).ready(function () {
     });
 
     $('#restart').click(function(){
+        nbGeneration=0;
+        $('#generation').attr("value", nbGeneration);
         clearInterval(nIntervId);
         nIntervId = null;
         setTable();
@@ -47,7 +49,6 @@ function setTable(){
 
 function defineCase(){
     $("td").click(function() {
-        console.log("click");
         var val = $(this).attr('value');
 
         if (val == "0") {
