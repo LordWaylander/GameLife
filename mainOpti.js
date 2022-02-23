@@ -1,20 +1,22 @@
-var nbRow = 100,
-    nbCol = 100,
-    nIntervId,
-    nbGeneration=0,
-    vueTableau = [],
-    vivantTable=[],
-    laTable = null;
+var nbRow = 100;
+var nbCol = 100;
+var nIntervId = null;
+var nbGeneration = 0;
+var vueTableau = [];
+var laTable = null;
 
+var nbVoisins = [];
 
 $(document).ready(function () {
-    laTable = $('#dataTable');
+    laTable = $('#dataTable');;
+
     setTable();
 
     $('#start').click(function(){
-        if (!nIntervId) {
+        /*if (!nIntervId) {
             nIntervId = setInterval(play, 200);
-        }
+        }*/
+        play();
     });
 
     $('#pause').click(function(){
@@ -36,35 +38,57 @@ $(document).ready(function () {
 });
 
 function setTable(){
-    var maLigne = null,
-        maCellule = null,
-        tableContainer = laTable.find('tbody').empty();
+    var ts1 = performance.now();
+    var tableau = '';
+    var tableContainer = laTable.find('tbody').empty();
 
     vueTableau = new Array(nbRow);
+    nbVoisins = new Array(nbRow);
     for (var i = 0; i < nbRow; i++) {
-        maLigne = $('<tr></tr>');
         vueTableau[i] = new Array(nbCol);
+        nbVoisins[i] = new Array(nbCol);
+        nbVoisins[i].fill(0);
+        tableau+='<tr>';
         for (var j = 0; j < nbCol; j++) {
             var color = Math.floor(Math.random() * 2);
-            maCellule = $('<td class="' + (color != 0 ? 'estvivante':'') + '" id="' + i + '-' + j + '" data-row="' + i + '" data-col="' + j + '"></td>');
-            if (color!=0) {
-                vivantTable.push(maCellule);
-            }
-            maLigne.append(maCellule);
-            vueTableau[i][j] = maCellule;
+            tableau+='<td class="' + (color != 0 ? 'estvivante':'') + '" id="'+i+'-'+j+'" data-row="'+i+'" data-col="'+j+'"></td>';
         }
-        tableContainer.append(maLigne);
     }
-    console.log(vivantTable);
+    tableau+='</tr>';
+    tableContainer.append(tableau);
+    var cellules = tableContainer[0].getElementsByTagName('td');
+    for (var i = 0; i < cellules.length; i++) {
+        vueTableau[cellules[i].dataset.row][cellules[i].dataset.col] = $(cellules[i]);
+    }
+    var ts2 = performance.now();
+    console.log('setTable : '+(ts2-ts1));
 }
 
-function getVoisins(row, col) {
-    // fonction pour obtenir les voisins de la cellule
-    var valeurDeRetour = [],
-        lignePrecedente = row - 1,
-        ligneSuivante = row + 1,
-        colonnePrecedente = col - 1,
-        colonneSuivante = col + 1;
+function play() {
+    var ts3 = performance.now();
+    var tableCheckCellules = [];
+    var tableConcateneAliveEtNaissance = [];
+
+    /*
+    var tableConcateneAliveEtNaissance = tableConcateneAliveEtNaissance.filter(function(a, b) {
+        return tableConcateneAliveEtNaissance.indexOf(a) == b;
+    });
+    */
+    updateFront(tableConcateneAliveEtNaissance);
+    nbGeneration++;
+    $('#generation').attr("value", nbGeneration);
+    var ts4 = performance.now();
+    console.log('play : '+(ts4-ts3));
+
+
+}
+
+function getVoisins(row, col){
+    var valeurDeRetour = [];
+    var lignePrecedente = row - 1;
+    var ligneSuivante = row + 1;
+    var colonnePrecedente = col - 1;
+    var colonneSuivante = col + 1;
 
     // Traitement de la ligne précédente
     if (lignePrecedente >= 0) {
@@ -96,27 +120,16 @@ function getVoisins(row, col) {
     return valeurDeRetour;
 }
 
-function checkCelluleStayAlive(tableGetVoisins, caseValue){
+function checkCellules(tableGetVoisins, cellule){
     var tableCellulesVivantes = [];
-    var NbcellsNoiresVoisinnes=0;
+    var NbcellsNoiresVoisinnesCellule=0;
 
-    $.each(tableGetVoisins, function(index, id){
-        if (this.hasClass("estvivante")) {
-            NbcellsNoiresVoisinnes++;
-        }
-    });
-    if (NbcellsNoiresVoisinnes == 2 || NbcellsNoiresVoisinnes == 3) {
-        // la case reste vivante
-        tableCellulesVivantes.push(caseValue);
-    }
-    return tableCellulesVivantes;
-}
-
-function CheckNaissance(tableGetVoisins){
-    var tableCellulesNaissantes = [];
     $.each(tableGetVoisins, function(){
-        var tableGetVoisinsVoisins = getVoisins(this.data('row'), this.data('col'));
+        if (this.hasClass("estvivante")) {
+            NbcellsNoiresVoisinnesCellule++;
+        }
 
+        var tableGetVoisinsVoisins = getVoisins(this.data('row'), this.data('col'));
         var NbcellsNoiresVoisinnes=0;
         $.each(tableGetVoisinsVoisins, function(){
             if (this.hasClass("estvivante")) {
@@ -126,42 +139,19 @@ function CheckNaissance(tableGetVoisins){
 
         if (NbcellsNoiresVoisinnes == 3 && !this.hasClass('estvivante')) {
             // la case prend vie
-            tableCellulesNaissantes.push(this);
+            tableCellulesVivantes.push(this);
         }
     });
-
-    return tableCellulesNaissantes
+    if (NbcellsNoiresVoisinnesCellule == 2 || NbcellsNoiresVoisinnesCellule == 3) {
+        // la case reste vivante
+        tableCellulesVivantes.push(cellule);
+    }
+    return tableCellulesVivantes;
 }
 
-function updateFront(TableCellules){
-    var html = $("#dataTable").get(0);
-    // tout setup a blanc puis set les bonnes cellules a noir
+function updateFront(tableConcateneAliveEtNaissance){
     laTable.find('.estvivante').removeClass('estvivante');
-    $.each(TableCellules, function() {
+    $.each(tableConcateneAliveEtNaissance, function() {
         this.addClass('estvivante');
     });
-}
-
-function play(){
-    var tableCells = [];
-    var tableCheckCelluleStayAlive = [];
-    var tableCheckNaissance = [];
-    var tableConcateneAliveEtNaissance = [];
-
-    tableCells = laTable.find('.estvivante');
-    tableCells.each(function() {
-        var maCellule = $(this);
-        var tableGetVoisins = getVoisins(maCellule.data('row'), maCellule.data('col'));
-        tableCheckCelluleStayAlive = checkCelluleStayAlive(tableGetVoisins, maCellule);
-        tableCheckNaissance = CheckNaissance(tableGetVoisins);
-        tableConcateneAliveEtNaissance = tableConcateneAliveEtNaissance.concat(tableCheckCelluleStayAlive, tableCheckNaissance);
-    });
-
-    var tableConcateneAliveEtNaissance = tableConcateneAliveEtNaissance.filter(function(a, b) {
-        return tableConcateneAliveEtNaissance.indexOf(a) == b;
-    });
-
-    updateFront(tableConcateneAliveEtNaissance);
-    nbGeneration++;
-    $('#generation').attr("value", nbGeneration);
 }
