@@ -5,10 +5,8 @@ var nbGeneration = 0;
 var vueTableau = [];
 var laTable = null;
 
-var nbVoisins = [];
-
-$(document).ready(function () {
-    laTable = $('#dataTable');;
+document.addEventListener("DOMContentLoaded", function(e) {
+    laTable = $('#dataTable');
 
     setTable();
 
@@ -43,11 +41,8 @@ function setTable(){
     var tableContainer = laTable.find('tbody').empty();
 
     vueTableau = new Array(nbRow);
-    nbVoisins = new Array(nbRow);
     for (var i = 0; i < nbRow; i++) {
         vueTableau[i] = new Array(nbCol);
-        nbVoisins[i] = new Array(nbCol);
-        nbVoisins[i].fill(0);
         tableau+='<tr>';
         for (var j = 0; j < nbCol; j++) {
             var color = Math.floor(Math.random() * 2);
@@ -68,7 +63,14 @@ function play() {
     var ts3 = performance.now();
     var tableCheckCellules = [];
     var tableConcateneAliveEtNaissance = [];
+    var casesVivantes = laTable[0].getElementsByClassName('estvivante');
 
+    for (i = 0; i<casesVivantes.length; i++) {
+        var cellule = $(casesVivantes[i]);
+        var tableGetVoisins = getVoisins(cellule.data('row'), cellule.data('col'));
+        tableCheckCellules = checkCellules(tableGetVoisins, cellule);
+        tableConcateneAliveEtNaissance = tableConcateneAliveEtNaissance.concat(tableCheckCellules);
+    }
     /*
     var tableConcateneAliveEtNaissance = tableConcateneAliveEtNaissance.filter(function(a, b) {
         return tableConcateneAliveEtNaissance.indexOf(a) == b;
@@ -124,24 +126,23 @@ function checkCellules(tableGetVoisins, cellule){
     var tableCellulesVivantes = [];
     var NbcellsNoiresVoisinnesCellule=0;
 
-    $.each(tableGetVoisins, function(){
-        if (this.hasClass("estvivante")) {
+    for (var i = 0; i < tableGetVoisins.length; i++) {
+        if (tableGetVoisins[i].hasClass("estvivante")) {
             NbcellsNoiresVoisinnesCellule++;
         }
 
-        var tableGetVoisinsVoisins = getVoisins(this.data('row'), this.data('col'));
+        var tableGetVoisinsVoisins = getVoisins(tableGetVoisins[i].data('row'), tableGetVoisins[i].data('col'));
         var NbcellsNoiresVoisinnes=0;
-        $.each(tableGetVoisinsVoisins, function(){
-            if (this.hasClass("estvivante")) {
+        for (var j = 0; j < tableGetVoisinsVoisins.length; j++) {
+            if (tableGetVoisinsVoisins[j].hasClass("estvivante")) {
                 NbcellsNoiresVoisinnes++;
             }
-        });
-
-        if (NbcellsNoiresVoisinnes == 3 && !this.hasClass('estvivante')) {
-            // la case prend vie
-            tableCellulesVivantes.push(this);
         }
-    });
+        if (NbcellsNoiresVoisinnes == 3 && !tableGetVoisins[i].hasClass('estvivante')) {
+            // la case prend vie
+            tableCellulesVivantes.push(tableGetVoisins[i]);
+        }
+    }
     if (NbcellsNoiresVoisinnesCellule == 2 || NbcellsNoiresVoisinnesCellule == 3) {
         // la case reste vivante
         tableCellulesVivantes.push(cellule);
