@@ -1,4 +1,8 @@
 # GameLife
 Jeu de la vie créé en javascript avec Jquery
-Deux fichiers JS, un fichier (main) non optimisé puis le fichier optimisé (passage de 2s à l'exécution de la 1ere boucle à ~460ms puis 400ms)
-Mais cela reste encore à optimiser, l'objectif étant une exécution aux alentours de 200ms
+Trois fichiers JS: 
+- main2000, exécution de la 1ere boucle en ~2000ms
+- main400, exécution en ~400ms
+- main, exécution en ~60ms
+
+Merci à SuperPommeDeTerre ( https://github.com/SuperPommeDeTerre ) pour l'aide apportée :)
