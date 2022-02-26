@@ -5,4 +5,4 @@ Trois fichiers JS:
 - main400, exécution en ~400ms
 - main, exécution en ~60ms
 
-Merci à SuperPommeDeTerre ( https://github.com/SuperPommeDeTerre ) pour l'aide apportée :)
+Merci à [SuperPommeDeTerre]( https://github.com/SuperPommeDeTerre ) pour l'aide apportée :)
