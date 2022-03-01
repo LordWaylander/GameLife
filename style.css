@@ -1,0 +1,52 @@
+body{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(214, 214, 214);
+}
+#dataTable {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin: auto;
+}
+#dataTable td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    background-color: white;
+    width: 5px;
+    height: 5px;
+}
+#dataTable td.estvivante {
+    background-color: black;
+}
+
+#divGen{
+    margin: 1em auto 1em;
+    border: 3px solid rgb(129, 127, 127);
+    border-radius: 5px;
+}
+
+#divGen label{
+    font-weight: bold;
+}
+
+#divGen input{
+    border: none;
+    background-color: rgb(214, 214, 214);
+}
+
+#start img{
+    width: 25px;
+    height: 25px;
+}
+#buttons{
+    margin: auto;
+}
+#pause img{
+    width: 25px;
+    height: 25px;
+}
+
+#restart img{
+    width: 25px;
+    height: 25px;
+}

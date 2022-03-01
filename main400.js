@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
     table.addEventListener('click', (e)=>{
         e.target.classList.toggle('estvivante');
     });
-
 });
 
 function setTable(){
@@ -43,10 +42,8 @@ function setTable(){
     var tableau = '';
 
     etatJeu.vueTableau = new Array(nbRow);
-    //etatJeu.voisins = new Array(nbRow);
     for (var i = 0; i < nbRow; i++) {
         etatJeu.vueTableau[i] = new Array(nbCol);
-        //etatJeu.voisins[i] = new Array(nbCol);
         tableau+='<tr>';
         for (var j = 0; j < nbCol; j++) {
             var color = Math.floor(Math.random() * 2);
@@ -73,9 +70,7 @@ function play() {
     var casesVivantes = table.getElementsByClassName('estvivante');
     for (i = 0; i<casesVivantes.length; i++) {
         var cellule = casesVivantes[i];
-        var row = parseInt(cellule.getAttribute('data-row'));
-        var col = parseInt(cellule.getAttribute('data-col'));
-        tableGetVoisins = getVoisins(row, col);
+        tableGetVoisins = getVoisins(parseInt(cellule.getAttribute('data-row')), parseInt(cellule.getAttribute('data-col')));
         tableCheckCellules = checkCellules(tableGetVoisins, cellule);
         tableConcateneAliveEtNaissance = tableConcateneAliveEtNaissance.concat(tableCheckCellules);
     }

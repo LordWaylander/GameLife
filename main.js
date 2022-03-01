@@ -4,33 +4,34 @@ var nbRow = 100;
     nIntervId = null;
     tableJeu = new Object();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function(e) {
     var start = document.getElementById('start');
     var pause = document.getElementById('pause');
     var restart = document.getElementById('restart');
     var table = document.getElementById('dataTable');
 
-
-    start.addEventListener('click', ()=> {
-        /*if (!nIntervId) {
-            setInterval(play, 100);
-        }*/
-        play();
+    start.addEventListener('click', () => {
+        if (!nIntervId) {
+            nIntervId = setInterval(play, 250);
+        }
+        
+        //play();
     });
 
-    pause.addEventListener('click', ()=> {
+    pause.addEventListener('click', () => {
         clearInterval(nIntervId);
         nIntervId = null;
     });
 
     restart.addEventListener('click', () => {
+        nbGeneration = 0;
+        document.getElementById('generation').setAttribute("value", nbGeneration);
         clearInterval(nIntervId);
         nIntervId = null;
-        nbGeneration = 0;
         setTable();
     });
 
-    table.addEventListener('click', (e)=>{
+    table.addEventListener('click', (e) => {
         e.target.classList.toggle('estvivante');
     });
 
@@ -38,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function setTable() {
-    var ts1 = performance.now();
     var tableau = '';
     var tbody = document.querySelector('tbody');
 
@@ -62,29 +62,24 @@ function setTable() {
     for (var i = 0; i < cellules.length; i++) {
         tableJeu.etat[cellules[i].dataset.row][cellules[i].dataset.col] = cellules[i];
     }
-    var ts2 = performance.now();
-    console.log('setTable : '+(ts2-ts1));
 }
 
 function play() {
-    var ts1 = performance.now();
     var cellulesVivantes = table.getElementsByClassName('estvivante');
     for (var i = 0; i < cellulesVivantes.length; i++) {
+
         var voisinsCellulesVivantes = getVoisins(parseInt(cellulesVivantes[i].dataset.row), parseInt(cellulesVivantes[i].dataset.col));
+
         for (var j = 0; j < voisinsCellulesVivantes.length; j++) {
             tableJeu.nbVoisins[voisinsCellulesVivantes[j].dataset.row][voisinsCellulesVivantes[j].dataset.col]++
         }
     }
     var cellulesAlive = checkCellules();
-    nbGeneration++;
-    document.getElementById('generation').setAttribute("value", nbGeneration);
     // reset le tableau à 0
     for (i = 0; i < tableJeu.nbVoisins.length; i++) {
         tableJeu.nbVoisins[i].fill(0);
     }
     updateFront(cellulesAlive);
-    var ts2 = performance.now();
-    console.log('play : '+(ts2-ts1));
 }
 
 function getVoisins(row, col){
@@ -144,5 +139,6 @@ function updateFront(cellulesAlive){
     for (var i = 0; i < cellulesAlive.length; i++) {
         cellulesAlive[i].classList.add('estvivante');
     }
-    //tout reset a blanc et update
+    nbGeneration++;
+    document.getElementById('generation').setAttribute("value", nbGeneration);
 }
