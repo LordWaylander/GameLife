@@ -1,4 +1,4 @@
-let nbRow = 10;
+let nbRow = 100;
     nbCol = 100;
     nbGeneration = 0;
     nIntervId = null;
