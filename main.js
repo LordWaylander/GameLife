@@ -1,5 +1,5 @@
-let nbRow = 100;
-    nbCol = 100;
+let nbRow = 50;
+    nbCol = 50;
     nbGeneration = 0;
     nIntervId = null;
     tableJeu = new Object();
