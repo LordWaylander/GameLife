@@ -70,7 +70,7 @@ function play() {
   this.updateFront();
   
   let ts2 = performance.now()
-  this.moyenneTime += (ts2-ts1)
+  moyenneTime += (ts2-ts1)
   console.log('play : '+(ts2-ts1));
 }
 
@@ -149,6 +149,7 @@ function start(){
 
 function pause(){
   this.clearnIntervId();
+  console.log(moyenneTime/nbGeneration);
 }
 
 function restart(){

@@ -1,14 +1,17 @@
-let nbRow = 50;
-    nbCol = 50;
+let nbRow = Math.ceil(window.innerHeight/ 10);
+    nbCol = Math.ceil(window.innerWidth / 10);
     nbGeneration = 0;
     nIntervId = null;
     tableJeu = new Object();
+    moyenneTime = 0;
 
 document.addEventListener('DOMContentLoaded', function(e) {
     let start = document.getElementById('start');
     let pause = document.getElementById('pause');
     let restart = document.getElementById('restart');
     let table = document.getElementById('dataTable');
+    console.log('rows : '+nbRow);
+    console.log('cols : '+nbCol);
 
     start.addEventListener('click', () => {
         if (!nIntervId) {
@@ -21,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
     pause.addEventListener('click', () => {
         clearInterval(nIntervId);
         nIntervId = null;
+        console.log(moyenneTime/nbGeneration);
     });
 
     restart.addEventListener('click', () => {
@@ -64,6 +68,8 @@ function setTable() {
 }
 
 function play() {
+    let ts1 = performance.now()
+
     let cellulesVivantes = table.getElementsByClassName('estvivante');
     for (let i = 0; i < cellulesVivantes.length; i++) {
 
@@ -79,6 +85,10 @@ function play() {
         tableJeu.nbVoisins[i].fill(0);
     }
     updateFront(cellulesAlive);
+
+    let ts2 = performance.now()
+    moyenneTime += (ts2-ts1)
+    console.log('play : '+(ts2-ts1));
 }
 
 function getVoisins(row, col){
