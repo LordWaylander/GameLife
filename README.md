@@ -5,4 +5,6 @@ Trois fichiers JS:
 - main400, exécution en ~400ms
 - main, exécution en ~60ms
 
-Merci à [SuperPommeDeTerre]( https://github.com/SuperPommeDeTerre ) pour l'aide apportée :)
+- Version Canvas en ~ 10 / 20ms (tableau de 193 x 93)
+
+Merci à [SuperPommeDeTerre]( https://github.com/SuperPommeDeTerre ) et à [JDelauney]( https://github.com/jdelauney )pour l'aide apportée :)
